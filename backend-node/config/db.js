@@ -1,21 +1,23 @@
-import moongose from 'mongoose'
-import dotenv from 'dotenv';
+import moongose from "mongoose";
+import dotenv from "dotenv";
 dotenv.config();
 
 const MONGO_URI = process.env.MONGO_URI;
 
-moongose.set("strictQuery", false);
+moongose.set('strictQuery', true);
 
-
-
-const dbconnection = async () => {
-    try{
-       await moongose.connect(MONGO_URI);
-        console.log('Database connected successfully');
-
-    } catch(error) {
-        console.error('Database connection error:', error);
+const connectDB = async () => {
+    try {
+        await moongose.connect(MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("MongoDB connected successfully");
     }
-}
+    catch (error) {
+        console.error("MongoDB connection failed:", error.message);
+        process.exit(1);
+    }
+};
 
-export default dbconnection;
+export default connectDB;

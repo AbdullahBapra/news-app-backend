@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import dbconnection from './config/db.js';
+import connectDB from './config/db.js';
 import { scrapeDawnNews } from './scrapper/dawnscrapper.js';
 
 dotenv.config();
@@ -15,9 +15,14 @@ const app = express();
 app.use(cors());
 
 
+app.use(express.json());
+
+// app.use('/api', newsrouter);
+
 app.listen(PORT, async () => { 
-    const newsitems = await scrapeDawnNews();
-    console.log('Scraped news items:', newsitems);
+  const article = await scrapeDawnNews();
+  console.log(article);
+  await connectDB();
   console.log(`Server is running on port ${PORT}`);
 }
 );

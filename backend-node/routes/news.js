@@ -1,9 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import dbconnection from './config/db.js';
 import { scrapeDawnNews } from './scrapper/dawnscrapper.js';
 import News from './models/news.js';
+import router from './auth.js';
 dotenv.config();
 
 const app = express();
@@ -27,3 +27,20 @@ app.post('/summarize', async (req, res) => {
     res.status(500).json({ message: 'An error occurred while scraping and storing news' }); 
    }
 });
+
+// manual new route 
+
+router.post('/news', async (req, res) => {
+    try {
+        const { title, url, summary , source , category } = req.body;
+        const newNews = new News({ title, url, summary , source , category });
+        await newNews.save();
+        res.status(201).json({ message: 'News article created successfully', news: newNews });
+    }
+    catch (error) {
+        console.error('Error creating news article:', error);
+        res.status(500).json({ message: 'An error occurred while creating the news article' });
+    }
+});
+
+export default router;
